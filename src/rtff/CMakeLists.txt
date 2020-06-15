@@ -9,6 +9,8 @@ set(rtff_sources
 
   ${src}/rtff/buffer/ring/ring_buffer.cc
   ${src}/rtff/buffer/ring/ring_buffer.h
+  ${src}/rtff/buffer/ring/multichannel_ring_buffer.cc
+  ${src}/rtff/buffer/ring/multichannel_ring_buffer.h
   ${src}/rtff/buffer/ring/overlap_ring_buffer.cc
   ${src}/rtff/buffer/ring/overlap_ring_buffer.h
   ${src}/rtff/buffer/waveform.cc
