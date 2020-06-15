@@ -1,5 +1,5 @@
-#ifndef RTFF_FILTER_IMPL_H_
-#define RTFF_FILTER_IMPL_H_
+#ifndef RTFF_ANALYZER_H_
+#define RTFF_ANALYZER_H_
 
 #include <memory>
 #include <system_error>
@@ -94,4 +94,4 @@ class Analyzer {
 
 }  // namespace rtff
 
-#endif  // RTFF_FILTER_IMPL_H_
+#endif  // RTFF_ANALYZER_H_
