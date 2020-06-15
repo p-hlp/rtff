@@ -1,4 +1,4 @@
-#include "rtff/buffer/ring_buffer.h"
+#include "rtff/buffer/ring/ring_buffer.h"
 
 #include "rtff/buffer/waveform.h"
 #include "rtff/buffer/block.h"

@@ -1,5 +1,5 @@
-#ifndef RTFF_BUFFER_RING_BUFER_H_
-#define RTFF_BUFFER_RING_BUFER_H_
+#ifndef RTFF_BUFFER_RING_RING_BUFER_H_
+#define RTFF_BUFFER_RING_RING_BUFER_H_
 
 #include <cstdint>
 #include <vector>
@@ -111,4 +111,4 @@ class MultichannelRingBuffer {
 };
 }  // namespace rtff
 
-#endif  // RTFF_BUFFER_RING_BUFER_H_
+#endif  // RTFF_BUFFER_RING_RING_BUFER_H_

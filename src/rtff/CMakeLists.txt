@@ -7,10 +7,10 @@ set(rtff_sources
   ${src}/rtff/filter_impl.cc
   ${src}/rtff/filter_impl.h
 
-  ${src}/rtff/buffer/ring_buffer.cc
-  ${src}/rtff/buffer/ring_buffer.h
-  ${src}/rtff/buffer/overlap_ring_buffer.cc
-  ${src}/rtff/buffer/overlap_ring_buffer.h
+  ${src}/rtff/buffer/ring/ring_buffer.cc
+  ${src}/rtff/buffer/ring/ring_buffer.h
+  ${src}/rtff/buffer/ring/overlap_ring_buffer.cc
+  ${src}/rtff/buffer/ring/overlap_ring_buffer.h
   ${src}/rtff/buffer/waveform.cc
   ${src}/rtff/buffer/waveform.h
   ${src}/rtff/buffer/block.h
