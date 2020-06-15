@@ -45,8 +45,8 @@ const Eigen::VectorXf& FilterImpl::synthesis_window() const {
   return synthesis_window_;
 }
 
-void FilterImpl::Analyze(TimeAmplitudeBuffer& amplitude,
-                         TimeFrequencyBuffer* frequential) {
+void FilterImpl::Analyze(RawBlock& amplitude,
+                         TimeFrequencyBlock* frequential) {
   for (uint8_t channel_idx = 0; channel_idx < amplitude.channel_count();
        channel_idx++) {
     // apply the analysis window
@@ -57,8 +57,8 @@ void FilterImpl::Analyze(TimeAmplitudeBuffer& amplitude,
   }
 }
 
-void FilterImpl::Synthesize(const TimeFrequencyBuffer& frequential,
-                            TimeAmplitudeBuffer* amplitude) {
+void FilterImpl::Synthesize(const TimeFrequencyBlock& frequential,
+                            RawBlock* amplitude) {
   for (uint8_t channel_idx = 0; channel_idx < frequential.channel_count();
        channel_idx++) {
     auto& result_ = result_buffer_[channel_idx];

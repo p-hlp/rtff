@@ -42,16 +42,16 @@ class FilterImpl {
    * @note this function modifies the original signal by multiplying it with
    * the analysis window
    */
-  void Analyze(TimeAmplitudeBuffer& amplitude,
-               TimeFrequencyBuffer* frequential);
+  void Analyze(RawBlock& amplitude,
+               TimeFrequencyBlock* frequential);
 
   /**
    * @brief convert a time frequency representation into its signal
    * @param frequential: the time frequency representation
    * @param amplitude: the signal buffer
    */
-  void Synthesize(const TimeFrequencyBuffer& frequential,
-                  TimeAmplitudeBuffer* amplitude);
+  void Synthesize(const TimeFrequencyBlock& frequential,
+                  RawBlock* amplitude);
 
   /**
    * @return the window used for the analysis stage

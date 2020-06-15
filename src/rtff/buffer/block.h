@@ -58,8 +58,8 @@ class Block {
   std::vector<Vector> data_;
 };
 
-using TimeAmplitudeBuffer = Block<float>;
-using TimeFrequencyBuffer = Block<std::complex<float>>;
+using RawBlock = Block<float>;
+using TimeFrequencyBlock = Block<std::complex<float>>;
 
 }  // namespace rtff
 

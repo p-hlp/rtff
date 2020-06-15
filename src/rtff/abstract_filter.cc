@@ -9,9 +9,9 @@ namespace rtff {
 
 class AbstractFilter::Impl {
  public:
-  TimeAmplitudeBuffer amplitude_block;
-  TimeAmplitudeBuffer output_amplitude_block;
-  TimeFrequencyBuffer frequential_block;
+  RawBlock amplitude_block;
+  RawBlock output_amplitude_block;
+  TimeFrequencyBlock frequential_block;
 };
 
 AbstractFilter::AbstractFilter() :
