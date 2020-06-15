@@ -1,10 +1,10 @@
-#include "rtff/filter_impl.h"
+#include "rtff/analyzer.h"
 
 #include "rtff/fft/fft.h"
 
 namespace rtff {
 
-void FilterImpl::Init(uint32_t fft_size, uint32_t overlap,
+void Analyzer::Init(uint32_t fft_size, uint32_t overlap,
                       fft_window::Type windows_type,
                       uint8_t channel_count, std::error_code& err) {
   fft_size_ = fft_size;
@@ -34,18 +34,18 @@ void FilterImpl::Init(uint32_t fft_size, uint32_t overlap,
   }
 }
 
-uint32_t FilterImpl::overlap() const { return overlap_; }
-uint32_t FilterImpl::fft_size() const { return fft_size_; }
-uint32_t FilterImpl::window_size() const { return analysis_window().size(); }
-uint32_t FilterImpl::hop_size() const { return fft_size_ - overlap_; }
-const Eigen::VectorXf& FilterImpl::analysis_window() const {
+uint32_t Analyzer::overlap() const { return overlap_; }
+uint32_t Analyzer::fft_size() const { return fft_size_; }
+uint32_t Analyzer::window_size() const { return analysis_window().size(); }
+uint32_t Analyzer::hop_size() const { return fft_size_ - overlap_; }
+const Eigen::VectorXf& Analyzer::analysis_window() const {
   return analysis_window_;
 }
-const Eigen::VectorXf& FilterImpl::synthesis_window() const {
+const Eigen::VectorXf& Analyzer::synthesis_window() const {
   return synthesis_window_;
 }
 
-void FilterImpl::Analyze(RawBlock& amplitude,
+void Analyzer::Analyze(RawBlock& amplitude,
                          TimeFrequencyBlock* frequential) {
   for (uint8_t channel_idx = 0; channel_idx < amplitude.channel_count();
        channel_idx++) {
@@ -57,7 +57,7 @@ void FilterImpl::Analyze(RawBlock& amplitude,
   }
 }
 
-void FilterImpl::Synthesize(const TimeFrequencyBlock& frequential,
+void Analyzer::Synthesize(const TimeFrequencyBlock& frequential,
                             RawBlock* amplitude) {
   for (uint8_t channel_idx = 0; channel_idx < frequential.channel_count();
        channel_idx++) {

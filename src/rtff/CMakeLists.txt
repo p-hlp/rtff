@@ -4,8 +4,8 @@ set(rtff_sources
   ${src}/rtff/abstract_filter.cc
   ${src}/rtff/abstract_filter.h
 
-  ${src}/rtff/filter_impl.cc
-  ${src}/rtff/filter_impl.h
+  ${src}/rtff/analyzer.cc
+  ${src}/rtff/analyzer.h
 
   ${src}/rtff/buffer/ring/ring_buffer.cc
   ${src}/rtff/buffer/ring/ring_buffer.h

@@ -1,7 +1,7 @@
 #include "rtff/abstract_filter.h"
 
 #include "rtff/buffer/block.h"
-#include "rtff/filter_impl.h"
+#include "rtff/analyzer.h"
 #include "rtff/buffer/ring/multichannel_ring_buffer.h"
 #include "rtff/buffer/ring/overlap_ring_buffer.h"
 #include "rtff/buffer/ring/multichannel_overlap_ring_buffer.h"
@@ -47,7 +47,7 @@ void AbstractFilter::Init(uint8_t channel_count, std::error_code& err) {
   buffers_->output_amplitude_block.Init(hop_size(), channel_count);
   buffers_->frequential_block.Init(fft_size() / 2 + 1, channel_count);
 
-  impl_ = std::make_shared<FilterImpl>();
+  impl_ = std::make_shared<Analyzer>();
   impl_->Init(fft_size(), overlap(), windows_type(), channel_count, err);
   if (err) {
     return;

@@ -14,7 +14,7 @@ namespace rtff {
 
 class MultichannelOverlapRingBuffer;
 class MultichannelRingBuffer;
-class FilterImpl;
+class Analyzer;
 
 /**
  * @brief Base class of frequential filters.
@@ -154,7 +154,7 @@ class AbstractFilter {
   std::shared_ptr<MultichannelOverlapRingBuffer> input_buffer_;
   std::shared_ptr<MultichannelRingBuffer> output_buffer_;
 
-  std::shared_ptr<FilterImpl> impl_;
+  std::shared_ptr<Analyzer> impl_;
 
   class Impl;
   std::shared_ptr<Impl> buffers_;

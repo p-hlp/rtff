@@ -22,7 +22,7 @@ class Fft;
  * That class gather most of the filter implementation details.
  * It is where the time amplitude signal is converted into a time frequency one
  */
-class FilterImpl {
+class Analyzer {
  public:
   /**
    * @brief Initialize
