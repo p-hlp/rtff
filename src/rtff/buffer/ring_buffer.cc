@@ -1,6 +1,6 @@
 #include "rtff/buffer/ring_buffer.h"
 
-#include "rtff/buffer/audio_buffer.h"
+#include "rtff/buffer/waveform.h"
 #include "rtff/buffer/buffer.h"
 
 namespace rtff {
@@ -101,14 +101,14 @@ const RingBuffer& MultichannelRingBuffer::operator[](
   return buffers_[channel_idx];
 }
 
-void MultichannelRingBuffer::Write(const AudioBuffer& buffer,
+void MultichannelRingBuffer::Write(const Waveform& buffer,
                                    uint32_t frame_count) {
   assert(buffer.channel_count() == buffers_.size());
   for (auto channel_idx = 0; channel_idx < buffers_.size(); channel_idx++) {
     buffers_[channel_idx].Write(buffer.data(channel_idx), frame_count);
   }
 }
-bool MultichannelRingBuffer::Read(AudioBuffer* buffer, uint32_t frame_count) {
+bool MultichannelRingBuffer::Read(Waveform* buffer, uint32_t frame_count) {
   assert(buffer->channel_count() == buffers_.size());
   for (auto channel_idx = 0; channel_idx < buffers_.size(); channel_idx++) {
     if (!buffers_[channel_idx].Read(buffer->data(channel_idx), frame_count)) {

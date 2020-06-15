@@ -99,7 +99,7 @@ uint32_t AbstractFilter::FrameLatency() const {
   }
 }
 
-void AbstractFilter::ProcessBlock(AudioBuffer* buffer) {
+void AbstractFilter::ProcessBlock(Waveform* buffer) {
   auto frame_count = buffer->frame_count();
   input_buffer_->Write(*buffer, frame_count);
 

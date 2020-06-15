@@ -11,8 +11,8 @@ set(rtff_sources
   ${src}/rtff/buffer/ring_buffer.h
   ${src}/rtff/buffer/overlap_ring_buffer.cc
   ${src}/rtff/buffer/overlap_ring_buffer.h
-  ${src}/rtff/buffer/audio_buffer.cc
-  ${src}/rtff/buffer/audio_buffer.h
+  ${src}/rtff/buffer/waveform.cc
+  ${src}/rtff/buffer/waveform.h
   ${src}/rtff/buffer/buffer.h
 
   ${src}/rtff/fft/window.cc

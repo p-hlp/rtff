@@ -9,14 +9,14 @@ namespace rtff {
 /**
  * @brief a fixed size buffer of raw audio signal data
  */
-class AudioBuffer {
+class Waveform {
  public:
   /**
    * @brief Constructor
    * @param frame_count: the number of samples of each channel
    * @param channel_count: the number of channels
    */
-  AudioBuffer(uint32_t frame_count, uint8_t channel_count);
+  Waveform(uint32_t frame_count, uint8_t channel_count);
 
   /**
    * @brief fill the buffer with interleaved data

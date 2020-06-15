@@ -7,7 +7,7 @@
 
 #include <Eigen/Core>
 
-#include "rtff/buffer/audio_buffer.h"
+#include "rtff/buffer/waveform.h"
 #include "rtff/buffer/buffer.h"
 #include "rtff/buffer/ring_buffer.h"
 

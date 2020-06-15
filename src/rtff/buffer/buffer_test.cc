@@ -4,7 +4,7 @@
 
 #include <Eigen/Core>
 
-#include "rtff/buffer/audio_buffer.h"
+#include "rtff/buffer/waveform.h"
 #include "rtff/buffer/overlap_ring_buffer.h"
 #include "rtff/buffer/ring_buffer.h"
 
@@ -15,8 +15,8 @@ TEST(Buffer, AudioBuffer) {
   const auto frame_number = 44100;
   const auto channel_count = 2;
 
-  AudioBuffer buffer_from_split(frame_number, channel_count);
-  AudioBuffer buffer_from_interleaved(frame_number, channel_count);
+  Waveform buffer_from_split(frame_number, channel_count);
+  Waveform buffer_from_interleaved(frame_number, channel_count);
 
   Eigen::VectorXf left_channel = Eigen::VectorXf::Random(frame_number);
   Eigen::VectorXf right_channel = Eigen::VectorXf::Random(frame_number);
@@ -126,8 +126,8 @@ TEST(Buffer, MultichannelOverlapRingBuffer) {
   Eigen::MatrixXf input_data(channel_number, write_size);
   MultichannelOverlapRingBuffer buffer(read_size, step_size, channel_number);
 
-  AudioBuffer input_buffer(write_size, channel_number);
-  AudioBuffer output_buffer(read_size, channel_number);
+  Waveform input_buffer(write_size, channel_number);
+  Waveform output_buffer(read_size, channel_number);
 
   // write first 2 can't read
   input_data = data.block(0, current_frame, channel_number, write_size);
@@ -233,8 +233,8 @@ TEST(Buffer, MultichannelRingBuffer) {
   
   const auto channel_number = 2;
 
-  AudioBuffer input_buffer(2048, channel_number);
-  AudioBuffer output_buffer(2048, channel_number);
+  Waveform input_buffer(2048, channel_number);
+  Waveform output_buffer(2048, channel_number);
   
   MultichannelRingBuffer buffer(2048 * 8, 2);
   

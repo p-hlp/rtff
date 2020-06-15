@@ -39,7 +39,7 @@ TEST(RTFF, Basis) {
   ASSERT_FALSE(err);
   filter.set_block_size(block_size);
 
-  rtff::AudioBuffer buffer(block_size, channel_number);
+  rtff::Waveform buffer(block_size, channel_number);
 
   // For debug. From this point, the application shouldn't allocate any memory.
   Eigen::internal::set_is_malloc_allowed(false);
@@ -105,7 +105,7 @@ TEST(RTFF, ChangeBlockSize) {
   auto block_size = 512;
   filter.set_block_size(block_size);
 
-  auto buffer = std::make_shared<rtff::AudioBuffer>(block_size, channel_number);
+  auto buffer = std::make_shared<rtff::Waveform>(block_size, channel_number);
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer->data(0), 0, block_size);
@@ -113,7 +113,7 @@ TEST(RTFF, ChangeBlockSize) {
   }
   block_size = 1024;
   filter.set_block_size(block_size);
-  buffer = std::make_shared<rtff::AudioBuffer>(block_size, channel_number);
+  buffer = std::make_shared<rtff::Waveform>(block_size, channel_number);
   // queue 50 other buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer->data(0), 0, block_size);
@@ -138,7 +138,7 @@ TEST(RTFF, Filter) {
   auto block_size = 512;
   filter.set_block_size(block_size);
 
-  rtff::AudioBuffer buffer(block_size, channel_number);
+  rtff::Waveform buffer(block_size, channel_number);
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer.data(0), 0, block_size);
@@ -226,7 +226,7 @@ TEST(RTFF, LittleBlockSize) {
 
   // Testing 64 bytes block
   auto block_size = 64;
-  rtff::AudioBuffer buffer(block_size, channel_number);
+  rtff::Waveform buffer(block_size, channel_number);
   filter.set_block_size(block_size);
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
@@ -236,7 +236,7 @@ TEST(RTFF, LittleBlockSize) {
 
   // Testing 43 bytes block
   block_size = 43;
-  buffer = rtff::AudioBuffer(block_size, channel_number);
+  buffer = rtff::Waveform(block_size, channel_number);
   filter.set_block_size(block_size);
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
@@ -248,7 +248,7 @@ TEST(RTFF, LittleBlockSize) {
 
 // Compute the filter latency by sending a Dirac and checking the filter output
 uint32_t GetLatency(rtff::Filter& filter) {
-  rtff::AudioBuffer buffer(filter.block_size(), filter.channel_count());
+  rtff::Waveform buffer(filter.block_size(), filter.channel_count());
   auto block_size = filter.block_size();
 
   // generate a dirac
@@ -289,7 +289,7 @@ TEST(RTFF, HannWindow) {
       buffer = Eigen::VectorXcf::Random(size);
     }
   };
-  rtff::AudioBuffer buffer(filter.block_size(), filter.channel_count());
+  rtff::Waveform buffer(filter.block_size(), filter.channel_count());
   for (auto index = 0; index < 50; index++) {
     filter.ProcessBlock(&buffer);
   }

@@ -8,7 +8,7 @@ namespace rtff {
 
 template <typename T>
 class Buffer;
-class AudioBuffer;
+class Waveform;
 
 /**
  * @brief RingBuffer represent a circular buffer. It is used to store enough
@@ -84,14 +84,14 @@ class MultichannelRingBuffer {
    * @param buffer: the AudioBuffer to write
    * @param frame_count: the number of samples available in the buffer
    */
-  void Write(const AudioBuffer& buffer, uint32_t frame_count);
+  void Write(const Waveform& buffer, uint32_t frame_count);
   /**
    * @brief read data from the buffer and remove frame_count data
    * @param buffer: a pre-allocated AudioBuffer of size frame_count
    * @param frame_count: the number of frames to read
    * @return true is read was successful
    */
-  bool Read(AudioBuffer* buffer, uint32_t frame_count);
+  bool Read(Waveform* buffer, uint32_t frame_count);
   /**
    * @brief write data to the buffer
    * @param buffer: the Buffer<float> to write

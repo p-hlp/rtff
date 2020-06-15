@@ -8,7 +8,7 @@ namespace rtff {
 
 template <typename T>
 class Buffer;
-class AudioBuffer;
+class Waveform;
 
 /**
  * @brief OverlapRingBuffer represents a Ring buffer with an overlap concept at
@@ -93,14 +93,14 @@ class MultichannelOverlapRingBuffer {
    * @param buffer: the AudioBuffer to write
    * @param frame_count: the number of samples available in the buffer
    */
-  void Write(const AudioBuffer& buffer, uint32_t frame_count);
+  void Write(const Waveform& buffer, uint32_t frame_count);
 
   /**
    * @brief read data from the buffer and remove step_size data
    * @param buffer: a pre-allocated AudioBuffer of size read_size
    * @return true is read was successful
    */
-  bool Read(AudioBuffer* buffer);
+  bool Read(Waveform* buffer);
 
   /**
    * @brief write data to the buffer
