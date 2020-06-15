@@ -4,6 +4,7 @@
 #include "rtff/filter_impl.h"
 #include "rtff/buffer/ring/multichannel_ring_buffer.h"
 #include "rtff/buffer/ring/overlap_ring_buffer.h"
+#include "rtff/buffer/ring/multichannel_overlap_ring_buffer.h"
 
 namespace rtff {
 

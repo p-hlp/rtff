@@ -6,6 +6,7 @@
 
 #include "rtff/buffer/waveform.h"
 #include "rtff/buffer/ring/overlap_ring_buffer.h"
+#include "rtff/buffer/ring/multichannel_overlap_ring_buffer.h"
 #include "rtff/buffer/ring/ring_buffer.h"
 #include "rtff/buffer/ring/multichannel_ring_buffer.h"
 
