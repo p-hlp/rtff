@@ -13,7 +13,7 @@ set(rtff_sources
   ${src}/rtff/buffer/overlap_ring_buffer.h
   ${src}/rtff/buffer/waveform.cc
   ${src}/rtff/buffer/waveform.h
-  ${src}/rtff/buffer/buffer.h
+  ${src}/rtff/buffer/block.h
 
   ${src}/rtff/fft/window.cc
   ${src}/rtff/fft/window.h
@@ -78,7 +78,7 @@ install(FILES
   DESTINATION include/rtff
 )
 install(FILES
-  ${src}/rtff/buffer/audio_buffer.h
+  ${src}/rtff/buffer/waveform.h
   DESTINATION include/rtff/buffer
 )
 install(FILES

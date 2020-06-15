@@ -1,5 +1,5 @@
-#ifndef RTFF_BUFFER_BUFFER_H_
-#define RTFF_BUFFER_BUFFER_H_
+#ifndef RTFF_BUFFER_BLOCK_H_
+#define RTFF_BUFFER_BLOCK_H_
 
 #include <Eigen/Core>
 
@@ -9,7 +9,7 @@ namespace rtff {
  * @brief A multichannel data storage class
  */
 template <typename T>
-class Buffer {
+class Block {
  public:
   using Vector = Eigen::Matrix<T, Eigen::Dynamic, 1>;
   /**
@@ -58,9 +58,9 @@ class Buffer {
   std::vector<Vector> data_;
 };
 
-using TimeAmplitudeBuffer = Buffer<float>;
-using TimeFrequencyBuffer = Buffer<std::complex<float>>;
+using TimeAmplitudeBuffer = Block<float>;
+using TimeFrequencyBuffer = Block<std::complex<float>>;
 
 }  // namespace rtff
 
-#endif  // RTFF_BUFFER_BUFFER_H_
+#endif  // RTFF_BUFFER_BLOCK_H_

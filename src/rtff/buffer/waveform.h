@@ -1,5 +1,5 @@
-#ifndef RTFF_BUFFER_AUDIO_BUFFER_H_
-#define RTFF_BUFFER_AUDIO_BUFFER_H_
+#ifndef RTFF_BUFFER_WAVEFORM_H_
+#define RTFF_BUFFER_WAVEFORM_H_
 
 #include <cstdint>
 #include <vector>
@@ -56,4 +56,4 @@ class Waveform {
 
 }  // namespace rtff
 
-#endif  // RTFF_BUFFER_AUDIO_BUFFER_H_
+#endif  // RTFF_BUFFER_WAVEFORM_H_

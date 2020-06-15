@@ -7,7 +7,7 @@
 namespace rtff {
 
 template <typename T>
-class Buffer;
+class Block;
 class Waveform;
 
 /**
@@ -107,14 +107,14 @@ class MultichannelOverlapRingBuffer {
    * @param buffer: the Buffer<float> to write
    * @param frame_count: the number of samples available in the buffer
    */
-  void Write(const Buffer<float>& buffer, uint32_t frame_count);
+  void Write(const Block<float>& buffer, uint32_t frame_count);
 
   /**
    * @brief read data from the buffer and remove step_size data
    * @param buffer: a pre-allocated Buffer<float> of size read_size
    * @return true is read was successful
    */
-  bool Read(Buffer<float>* buffer);
+  bool Read(Block<float>* buffer);
 
  private:
   std::vector<OverlapRingBuffer> buffers_;

@@ -7,7 +7,7 @@
 namespace rtff {
 
 template <typename T>
-class Buffer;
+class Block;
 class Waveform;
 
 /**
@@ -97,14 +97,14 @@ class MultichannelRingBuffer {
    * @param buffer: the Buffer<float> to write
    * @param frame_count: the number of samples available in the buffer
    */
-  void Write(const Buffer<float>& buffer, uint32_t frame_count);
+  void Write(const Block<float>& buffer, uint32_t frame_count);
   /**
    * @brief read data from the buffer and remove frame_count data
    * @param buffer: a pre-allocated Buffer<float> of size frame_count
    * @param frame_count: the number of frames to read
    * @return true is read was successful
    */
-  bool Read(Buffer<float>* buffer, uint32_t frame_count);
+  bool Read(Block<float>* buffer, uint32_t frame_count);
 
  private:
   std::vector<RingBuffer> buffers_;

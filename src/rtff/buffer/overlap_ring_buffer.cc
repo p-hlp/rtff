@@ -1,7 +1,7 @@
 #include "rtff/buffer/overlap_ring_buffer.h"
 
 #include "rtff/buffer/waveform.h"
-#include "rtff/buffer/buffer.h"
+#include "rtff/buffer/block.h"
 
 namespace rtff {
 
@@ -124,7 +124,7 @@ bool MultichannelOverlapRingBuffer::Read(Waveform* buffer) {
   return true;
 }
 
-void MultichannelOverlapRingBuffer::Write(const Buffer<float>& buffer,
+void MultichannelOverlapRingBuffer::Write(const Block<float>& buffer,
                                           uint32_t frame_count) {
   assert(buffer.channel_count() == buffers_.size());
   for (auto channel_idx = 0; channel_idx < buffers_.size(); channel_idx++) {
@@ -132,7 +132,7 @@ void MultichannelOverlapRingBuffer::Write(const Buffer<float>& buffer,
                                 frame_count);
   }
 }
-bool MultichannelOverlapRingBuffer::Read(Buffer<float>* buffer) {
+bool MultichannelOverlapRingBuffer::Read(Block<float>* buffer) {
   assert(buffer->channel_count() == buffers_.size());
   for (auto channel_idx = 0; channel_idx < buffers_.size(); channel_idx++) {
     if (!buffers_[channel_idx].Read(buffer->channel(channel_idx).data())) {
