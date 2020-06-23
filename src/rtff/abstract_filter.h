@@ -7,14 +7,9 @@
 #include <vector>
 
 #include "rtff/buffer/waveform.h"
-
 #include "rtff/fft/window_type.h"
 
 namespace rtff {
-
-class MultichannelOverlapRingBuffer;
-class MultichannelRingBuffer;
-class Analyzer;
 
 /**
  * @brief Base class of frequential filters.
@@ -78,7 +73,7 @@ class AbstractFilter {
    * should be equal to the filter block_size
    * @param buffer: the input data
    */
-  void Write(const Waveform* buffer);
+  void Write(const Waveform& buffer);
   
   /**
    * @brief Write a block of raw audio data to the filter
@@ -144,20 +139,8 @@ class AbstractFilter {
                                        uint32_t size) = 0;
 
  private:
-  void InitBuffers();
-
-  uint32_t fft_size_;
-  uint32_t overlap_;
-  fft_window::Type window_type_;
-  uint32_t block_size_;
-  uint8_t channel_count_;
-  std::shared_ptr<MultichannelOverlapRingBuffer> input_buffer_;
-  std::shared_ptr<MultichannelRingBuffer> output_buffer_;
-
-  std::shared_ptr<Analyzer> impl_;
-
   class Impl;
-  std::shared_ptr<Impl> buffers_;
+  std::shared_ptr<Impl> impl_;
 };
 
 }  // namespace rtff

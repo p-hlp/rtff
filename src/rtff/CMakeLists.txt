@@ -3,6 +3,8 @@ set(rtff_sources
   ${src}/rtff/filter.h
   ${src}/rtff/abstract_filter.cc
   ${src}/rtff/abstract_filter.h
+  ${src}/rtff/mixing_filter.cc
+  ${src}/rtff/mixing_filter.h
 
   ${src}/rtff/analyzer.cc
   ${src}/rtff/analyzer.h

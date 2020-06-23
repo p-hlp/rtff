@@ -1,135 +1,75 @@
 #include "rtff/abstract_filter.h"
 
-#include "rtff/buffer/block.h"
-#include "rtff/analyzer.h"
-#include "rtff/buffer/ring/multichannel_ring_buffer.h"
-#include "rtff/buffer/ring/overlap_ring_buffer.h"
-#include "rtff/buffer/ring/multichannel_overlap_ring_buffer.h"
+#include "rtff/mixing_filter.h"
 
 namespace rtff {
 
-class AbstractFilter::Impl {
+class AbstractFilter::Impl : public MixingFilter<1, 1> {
  public:
-  RawBlock amplitude_block;
-  RawBlock output_amplitude_block;
-  TimeFrequencyBlock frequential_block;
+  Impl(AbstractFilter* instance) : instance_(instance) {}
+   void ProcessTimeFrequencyBlock(MixingFilter<1, 1>::TimeFrequencyInput input, uint32_t size, MixingFilter<1, 1>::TimeFrequencyOutput* output) {
+     
+     // Process the block
+     instance_->ProcessTransformedBlock(input[0], size);
+     // Copy to the output
+     // TODO: this breaks the overall performance. The copy is useless in N to N filters
+     std::vector<std::complex<float>*> output_data = (*output)[0];
+     for (auto channel_idx = 0; channel_idx < channel_count(); channel_idx++) {
+       auto out_map = Eigen::Map<Eigen::VectorXcf>((*output)[0][channel_idx], size);
+       auto in_map = Eigen::Map<Eigen::VectorXcf>(input[0][channel_idx], size);
+       out_map = in_map;
+     }
+   }
+private:
+  AbstractFilter* instance_;
 };
 
-AbstractFilter::AbstractFilter() :
-  fft_size_(2048),
-  overlap_(2048 * 0.5),
-  window_type_(fft_window::Type::Hamming),
-  block_size_(512) {}
+AbstractFilter::AbstractFilter() : impl_(std::make_shared<Impl>(this)) {}
 
 AbstractFilter::~AbstractFilter() {}
 
 void AbstractFilter::Init(uint8_t channel_count, uint32_t fft_size,
                           uint32_t overlap, std::error_code& err) {
-  Init(channel_count, fft_size, overlap, fft_window::Type::Hamming, err);
+  impl_->Init(channel_count, fft_size, overlap, err);
 }
 
 void AbstractFilter::Init(uint8_t channel_count, uint32_t fft_size,
                           uint32_t overlap, fft_window::Type windows_type,
                           std::error_code& err) {
-  fft_size_ = fft_size;
-  overlap_ = overlap;
-  window_type_ = windows_type;
-  Init(channel_count, err);
+  impl_->Init(channel_count, fft_size, overlap, windows_type, err);
 }
 
 void AbstractFilter::Init(uint8_t channel_count, std::error_code& err) {
-  channel_count_ = channel_count;
-  InitBuffers();
-
-  // init single block buffers
-  buffers_ = std::make_shared<Impl>();
-  buffers_->amplitude_block.Init(fft_size(), channel_count);
-  buffers_->output_amplitude_block.Init(hop_size(), channel_count);
-  buffers_->frequential_block.Init(fft_size() / 2 + 1, channel_count);
-
-  impl_ = std::make_shared<Analyzer>();
-  impl_->Init(fft_size(), overlap(), windows_type(), channel_count, err);
-  if (err) {
-    return;
-  }
-  PrepareToPlay();
-}
-
-void AbstractFilter::InitBuffers() {
-  input_buffer_ = std::make_shared<MultichannelOverlapRingBuffer>(
-      fft_size(), hop_size(), channel_count());
-
-  // We must make sure the ring buffer is not smaller than the hop size, because
-  // the output amplitude buffer will try to write blocks of hop size into it
-  uint32_t arbitrary_buffer_size = block_size() * 8;
-  if (arbitrary_buffer_size <= hop_size()) {
-    arbitrary_buffer_size = hop_size() * 2;
-  }
-  output_buffer_ = std::make_shared<MultichannelRingBuffer>(
-      arbitrary_buffer_size, channel_count());
-
-  // initialize the intput_buffer_ with hop_size frames of zeros
-  if (fft_size() > block_size()) {
-    input_buffer_->InitWithZeros(fft_size() - block_size());
-  }
+  impl_->Init(channel_count, err);
 }
 
 void AbstractFilter::set_block_size(uint32_t value) {
-  block_size_ = value;
-  InitBuffers();
-  PrepareToPlay();
+  impl_->set_block_size(value);
 }
-uint32_t AbstractFilter::block_size() const { return block_size_; }
-uint8_t AbstractFilter::channel_count() const { return channel_count_; }
+uint32_t AbstractFilter::block_size() const { return impl_->block_size(); }
+uint8_t AbstractFilter::channel_count() const { return impl_->channel_count(); }
 
 uint32_t AbstractFilter::window_size() const { return impl_->window_size(); }
-uint32_t AbstractFilter::fft_size() const { return fft_size_; }
-uint32_t AbstractFilter::overlap() const { return overlap_; }
-fft_window::Type AbstractFilter::windows_type() const { return window_type_; }
-uint32_t AbstractFilter::hop_size() const { return fft_size_ - overlap_; }
+uint32_t AbstractFilter::fft_size() const { return impl_->fft_size(); }
+uint32_t AbstractFilter::overlap() const { return impl_->overlap(); }
+fft_window::Type AbstractFilter::windows_type() const { return impl_->windows_type(); }
+uint32_t AbstractFilter::hop_size() const { return impl_->hop_size(); }
 
 uint32_t AbstractFilter::FrameLatency() const {
-  // latency has three different states:
-  if (hop_size() % block_size() == 0) {
-    // when hop size can be devided by block size
-    return fft_size() - block_size();
-  } else if (block_size() < fft_size()) {
-    return fft_size();
-  } else {
-    return block_size();
-  }
+  return impl_->FrameLatency();
 }
 
 void AbstractFilter::ProcessBlock(Waveform* buffer) {
-  Write(buffer);
+  Write(*buffer);
   Read(buffer);
 }
 
-void AbstractFilter::Write(const Waveform* buffer) {
-  auto frame_count = buffer->frame_count();
-  input_buffer_->Write(*buffer, frame_count);
-
-  // process as many blocks as possible
-  while (input_buffer_->Read(&(buffers_->amplitude_block))) {
-    impl_->Analyze(buffers_->amplitude_block, &(buffers_->frequential_block));
-    ProcessTransformedBlock(buffers_->frequential_block.data_ptr(),
-                            buffers_->frequential_block.size());
-    impl_->Synthesize(buffers_->frequential_block,
-                      &(buffers_->output_amplitude_block));
-    output_buffer_->Write(buffers_->output_amplitude_block,
-                          buffers_->output_amplitude_block.size());
-  }
+void AbstractFilter::Write(const Waveform& buffer) {
+  impl_->Write(&buffer);
 }
 
 void AbstractFilter::Read(Waveform* buffer) {
-  auto frame_count = buffer->frame_count();
-  if (output_buffer_->Read(buffer, frame_count)) {
-    return;
-  }
-  // if we don't have enough data to be read, just fill with zeros
-  for (auto channel_idx = 0; channel_idx < buffer->channel_count(); channel_idx++) {
-    std::fill(buffer->data(channel_idx), buffer->data(channel_idx) + frame_count, 0);
-  }
+  impl_->Read(reinterpret_cast<MixingFilter<1, 1>::Output*>(buffer));
 }
 
 void AbstractFilter::PrepareToPlay() {}

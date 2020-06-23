@@ -4,6 +4,7 @@
 
 #include <Eigen/Core>
 
+#include "rtff/mixing_filter.h"
 #include "rtff/abstract_filter.h"
 #include "rtff/filter.h"
 #include "wave/file.h"
@@ -54,7 +55,7 @@ TEST(RTFF, Basis) {
     float* sample_ptr = content.data() + sample_idx;
 
     buffer.fromInterleaved(sample_ptr);
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
     buffer.toInterleaved(sample_ptr);
 
@@ -110,7 +111,7 @@ TEST(RTFF, ChangeBlockSize) {
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer->data(0), 0, block_size);
-    filter.Write(buffer.get());
+    filter.Write(*buffer);
     filter.Read(buffer.get());
   }
   block_size = 1024;
@@ -119,7 +120,7 @@ TEST(RTFF, ChangeBlockSize) {
   // queue 50 other buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer->data(0), 0, block_size);
-    filter.Write(buffer.get());
+    filter.Write(*buffer);
     filter.Read(buffer.get());
   }
 }
@@ -145,7 +146,7 @@ TEST(RTFF, Filter) {
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer.data(0), 0, block_size);
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
   }
 }
@@ -235,7 +236,7 @@ TEST(RTFF, LittleBlockSize) {
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer.data(0), 0, block_size);
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
   }
 
@@ -246,7 +247,7 @@ TEST(RTFF, LittleBlockSize) {
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer.data(0), 0, block_size);
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
   }
 
@@ -269,7 +270,7 @@ uint32_t GetLatency(rtff::Filter& filter) {
     float* sample_ptr = content.data() + sample_idx;
     memcpy(buffer.data(0), sample_ptr, block_size * sizeof(float));
 
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
 
     memcpy(sample_ptr, buffer.data(0), block_size * sizeof(float));
@@ -298,7 +299,41 @@ TEST(RTFF, HannWindow) {
   };
   rtff::Waveform buffer(filter.block_size(), filter.channel_count());
   for (auto index = 0; index < 50; index++) {
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
+  }
+}
+
+using DefaultMixFilter = rtff::MixingFilter<1, 1>;
+class MyMixingFilter : public DefaultMixFilter {
+private:
+  void ProcessTimeFrequencyBlock(DefaultMixFilter::TimeFrequencyInput input, uint32_t size, DefaultMixFilter::TimeFrequencyOutput* output) override {
+    // generate white noise
+    std::vector<std::complex<float>*> output_data = (*output)[0];
+    for (auto channel_idx = 0; channel_idx < channel_count(); channel_idx++) {
+      auto map = Eigen::Map<Eigen::VectorXcf>((*output)[0][channel_idx], fft_size());
+      map = Eigen::VectorXcf::Random(fft_size());
+    }
+  }
+};
+
+
+// this test makes sure that filter class syntax is functionnal
+TEST(RTFF, MixingFilter) {
+  MyMixingFilter filter;
+  std::error_code err;
+  auto channel_number = 1;
+  filter.Init(channel_number, err);
+
+  ASSERT_FALSE(err);
+  auto block_size = 512;
+  filter.set_block_size(block_size);
+
+  rtff::Waveform buffers[1] = {{static_cast<uint32_t>(block_size), static_cast<uint8_t>(channel_number)}};
+  // queue 50 buffer
+  for (auto index = 0; index < 50; index++) {
+    memset(buffers[0].data(0), 0, block_size);
+    filter.Write(buffers);
+    filter.Read(&buffers);
   }
 }
