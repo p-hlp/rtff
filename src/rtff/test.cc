@@ -311,8 +311,8 @@ private:
     // generate white noise
     std::vector<std::complex<float>*> output_data = (*output)[0];
     for (auto channel_idx = 0; channel_idx < channel_count(); channel_idx++) {
-      auto map = Eigen::Map<Eigen::VectorXcf>((*output)[0][channel_idx], fft_size());
-      map = Eigen::VectorXcf::Random(fft_size());
+      auto map = Eigen::Map<Eigen::VectorXcf>((*output)[0][channel_idx], size);
+      map = Eigen::VectorXcf::Random(size);
     }
   }
 };
