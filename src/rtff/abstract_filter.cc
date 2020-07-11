@@ -101,13 +101,13 @@ uint32_t AbstractFilter::FrameLatency() const {
 }
 
 void AbstractFilter::ProcessBlock(Waveform* buffer) {
-  Write(buffer);
+  Write(*buffer);
   Read(buffer);
 }
 
-void AbstractFilter::Write(const Waveform* buffer) {
-  auto frame_count = buffer->frame_count();
-  input_buffer_->Write(*buffer, frame_count);
+void AbstractFilter::Write(const Waveform& buffer) {
+  auto frame_count = buffer.frame_count();
+  input_buffer_->Write(buffer, frame_count);
 
   // process as many blocks as possible
   while (input_buffer_->Read(&(buffers_->amplitude_block))) {

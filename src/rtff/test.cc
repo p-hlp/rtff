@@ -54,7 +54,7 @@ TEST(RTFF, Basis) {
     float* sample_ptr = content.data() + sample_idx;
 
     buffer.fromInterleaved(sample_ptr);
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
     buffer.toInterleaved(sample_ptr);
 
@@ -110,7 +110,7 @@ TEST(RTFF, ChangeBlockSize) {
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer->data(0), 0, block_size);
-    filter.Write(buffer.get());
+    filter.Write(*buffer);
     filter.Read(buffer.get());
   }
   block_size = 1024;
@@ -119,7 +119,7 @@ TEST(RTFF, ChangeBlockSize) {
   // queue 50 other buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer->data(0), 0, block_size);
-    filter.Write(buffer.get());
+    filter.Write(*buffer);
     filter.Read(buffer.get());
   }
 }
@@ -145,7 +145,7 @@ TEST(RTFF, Filter) {
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer.data(0), 0, block_size);
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
   }
 }
@@ -235,7 +235,7 @@ TEST(RTFF, LittleBlockSize) {
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer.data(0), 0, block_size);
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
   }
 
@@ -246,7 +246,7 @@ TEST(RTFF, LittleBlockSize) {
   // queue 50 buffer
   for (auto index = 0; index < 50; index++) {
     memset(buffer.data(0), 0, block_size);
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
   }
 
@@ -269,7 +269,7 @@ uint32_t GetLatency(rtff::Filter& filter) {
     float* sample_ptr = content.data() + sample_idx;
     memcpy(buffer.data(0), sample_ptr, block_size * sizeof(float));
 
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
 
     memcpy(sample_ptr, buffer.data(0), block_size * sizeof(float));
@@ -298,7 +298,7 @@ TEST(RTFF, HannWindow) {
   };
   rtff::Waveform buffer(filter.block_size(), filter.channel_count());
   for (auto index = 0; index < 50; index++) {
-    filter.Write(&buffer);
+    filter.Write(buffer);
     filter.Read(&buffer);
   }
 }

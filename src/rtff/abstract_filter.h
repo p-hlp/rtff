@@ -78,7 +78,7 @@ class AbstractFilter {
    * should be equal to the filter block_size
    * @param buffer: the input data
    */
-  void Write(const Waveform* buffer);
+  void Write(const Waveform& buffer);
   
   /**
    * @brief Write a block of raw audio data to the filter
