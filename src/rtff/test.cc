@@ -12,11 +12,10 @@ const std::string gResourcePath(TEST_RESOURCES_PATH);
 
 class MyFilter : public rtff::AbstractFilter {
 private:
-  void ProcessTransformedBlock(std::vector<std::complex<float>*> data,
-                               uint32_t size) override {
-    for (uint8_t channel_idx = 0; channel_idx < data.size(); channel_idx++) {
-      auto buffer = Eigen::Map<Eigen::VectorXcf>(data[channel_idx], size);
-      ASSERT_EQ(size, fft_size() / 2 + 1);
+  void ProcessTransformedBlock(rtff::Block<std::complex<float>>* data) override {
+    for (uint8_t channel_idx = 0; channel_idx < data->channel_count(); channel_idx++) {
+      auto buffer = Eigen::Map<Eigen::VectorXcf>(data->channel(channel_idx), data->size());
+      ASSERT_EQ(data->size(), fft_size() / 2 + 1);
       buffer.block(20, 0, 50, 1) *= 0;
     }
   }
@@ -130,10 +129,10 @@ TEST(RTFF, Filter) {
   std::error_code err;
   auto channel_number = 1;
   filter.Init(channel_number, err);
-  filter.execute = [](std::vector<std::complex<float>*> data, uint32_t size) {
-    for (uint8_t channel_idx = 0; channel_idx < data.size(); channel_idx++) {
-      auto buffer = Eigen::Map<Eigen::VectorXcf>(data[channel_idx], size);
-      buffer = Eigen::VectorXcf::Random(size);
+  filter.execute = [](rtff::Block<std::complex<float>>* data) {
+    for (uint8_t channel_idx = 0; channel_idx < data->channel_count(); channel_idx++) {
+      auto buffer = Eigen::Map<Eigen::VectorXcf>(data->channel(channel_idx), data->size());
+      buffer = Eigen::VectorXcf::Random(data->size());
     }
   };
 
@@ -221,10 +220,10 @@ TEST(RTFF, LittleBlockSize) {
   filter.Init(channel_number, 2048, 2048*0.75, err);
   ASSERT_FALSE(err);
 
-  filter.execute = [](std::vector<std::complex<float>*> data, uint32_t size) {
-    for (uint8_t channel_idx = 0; channel_idx < data.size(); channel_idx++) {
-      auto buffer = Eigen::Map<Eigen::VectorXcf>(data[channel_idx], size);
-      buffer = Eigen::VectorXcf::Random(size);
+  filter.execute = [](rtff::Block<std::complex<float>>* data) {
+    for (uint8_t channel_idx = 0; channel_idx < data->channel_count(); channel_idx++) {
+      auto buffer = Eigen::Map<Eigen::VectorXcf>(data->channel(channel_idx), data->size());
+      buffer = Eigen::VectorXcf::Random(data->size());
     }
   };
 
@@ -290,10 +289,10 @@ TEST(RTFF, HannWindow) {
   filter.Init(channel_number, 2048, 1024, rtff::fft_window::Type::Hann, err);
   ASSERT_FALSE(err);
 
-  filter.execute = [](std::vector<std::complex<float>*> data, uint32_t size) {
-    for (uint8_t channel_idx = 0; channel_idx < data.size(); channel_idx++) {
-      auto buffer = Eigen::Map<Eigen::VectorXcf>(data[channel_idx], size);
-      buffer = Eigen::VectorXcf::Random(size);
+  filter.execute = [](rtff::Block<std::complex<float>>* data) {
+    for (uint8_t channel_idx = 0; channel_idx < data->channel_count(); channel_idx++) {
+      auto buffer = Eigen::Map<Eigen::VectorXcf>(data->channel(channel_idx), data->size());
+      buffer = Eigen::VectorXcf::Random(data->size());
     }
   };
   rtff::Waveform buffer(filter.block_size(), filter.channel_count());

@@ -4,13 +4,12 @@ namespace rtff {
 
 Filter::Filter()
     : rtff::AbstractFilter(),
-      execute([](std::vector<std::complex<float>*>, uint32_t) {}) {}
+      execute([](Block<std::complex<float>>*) {}) {}
 
 Filter::~Filter() {}
   
-void Filter::ProcessTransformedBlock(std::vector<std::complex<float>*> data,
-                                     uint32_t size) {
-  execute(data, size);
+void Filter::ProcessTransformedBlock(Block<std::complex<float>>* data) {
+  execute(data);
 }
 
 }  // namespace rtff

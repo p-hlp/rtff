@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "rtff/buffer/waveform.h"
+#include "rtff/buffer/block.h"
 
 #include "rtff/fft/window_type.h"
 
@@ -140,8 +141,7 @@ class AbstractFilter {
    * called on its own
    * Override this function to design your filter
    */
-  virtual void ProcessTransformedBlock(std::vector<std::complex<float>*> data,
-                                       uint32_t size) = 0;
+  virtual void ProcessTransformedBlock(Block<std::complex<float>>*) = 0;
 
  private:
   void InitBuffers();

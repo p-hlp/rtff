@@ -3,6 +3,8 @@ set(rtff_sources
   ${src}/rtff/filter.h
   ${src}/rtff/abstract_filter.cc
   ${src}/rtff/abstract_filter.h
+  # ${src}/rtff/mixing_filter.cc
+  # ${src}/rtff/mixing_filter.h
 
   ${src}/rtff/analyzer.cc
   ${src}/rtff/analyzer.h
@@ -18,6 +20,7 @@ set(rtff_sources
   ${src}/rtff/buffer/waveform.cc
   ${src}/rtff/buffer/waveform.h
   ${src}/rtff/buffer/block.h
+  ${src}/rtff/buffer/generic_block.h
 
   ${src}/rtff/fft/window.cc
   ${src}/rtff/fft/window.h
@@ -83,6 +86,7 @@ install(FILES
 )
 install(FILES
   ${src}/rtff/buffer/waveform.h
+  ${src}/rtff/buffer/block.h
   DESTINATION include/rtff/buffer
 )
 install(FILES

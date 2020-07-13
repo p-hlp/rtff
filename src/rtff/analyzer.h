@@ -8,7 +8,7 @@
 #include <Eigen/Core>
 
 #include "rtff/buffer/waveform.h"
-#include "rtff/buffer/block.h"
+#include "rtff/buffer/generic_block.h"
 #include "rtff/buffer/ring/ring_buffer.h"
 
 #include "rtff/fft/window.h"

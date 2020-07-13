@@ -1,6 +1,6 @@
 #include "rtff/abstract_filter.h"
 
-#include "rtff/buffer/block.h"
+#include "rtff/buffer/generic_block.h"
 #include "rtff/analyzer.h"
 #include "rtff/buffer/ring/multichannel_ring_buffer.h"
 #include "rtff/buffer/ring/overlap_ring_buffer.h"
@@ -112,8 +112,7 @@ void AbstractFilter::Write(const Waveform& buffer) {
   // process as many blocks as possible
   while (input_buffer_->Read(&(buffers_->amplitude_block))) {
     impl_->Analyze(buffers_->amplitude_block, &(buffers_->frequential_block));
-    ProcessTransformedBlock(buffers_->frequential_block.data_ptr(),
-                            buffers_->frequential_block.size());
+    ProcessTransformedBlock(&(buffers_->frequential_block));
     impl_->Synthesize(buffers_->frequential_block,
                       &(buffers_->output_amplitude_block));
     output_buffer_->Write(buffers_->output_amplitude_block,

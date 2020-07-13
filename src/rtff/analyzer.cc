@@ -50,10 +50,11 @@ void Analyzer::Analyze(RawBlock& amplitude,
   for (uint8_t channel_idx = 0; channel_idx < amplitude.channel_count();
        channel_idx++) {
     // apply the analysis window
-    amplitude.channel(channel_idx).array() *= analysis_window_.array();
+    auto map = Eigen::Map<Eigen::VectorXf>(amplitude.channel(channel_idx), amplitude.size());
+    map.array() *= analysis_window_.array();
     // compute the fft and store it into the frequential buffer
-    fft_->Forward(amplitude.channel(channel_idx).data(),
-                  frequential->channel(channel_idx).data());
+    fft_->Forward(amplitude.channel(channel_idx),
+                  frequential->channel(channel_idx));
   }
 }
 
@@ -66,7 +67,7 @@ void Analyzer::Synthesize(const TimeFrequencyBlock& frequential,
     auto& post_ifft = post_ifft_buffer_[channel_idx];
 
     // ifft
-    fft_->Backward(frequential.channel(channel_idx).data(), post_ifft.data());
+    fft_->Backward(frequential.channel(channel_idx), post_ifft.data());
     // apply synthesis window and sum to previous data
     // sum with previous data
     memset(result_.data(), 0, result_.size() * sizeof(float));
@@ -79,8 +80,8 @@ void Analyzer::Synthesize(const TimeFrequencyBlock& frequential,
     previous_ = result_.tail(previous_.size());
 
     // unwindow to get the right buffer
-    amplitude->channel(channel_idx).noalias() =
-        result_.head(hop_size()).transpose();
+    auto map = Eigen::Map<Eigen::VectorXf>(amplitude->channel(channel_idx), amplitude->size());
+    map.noalias() = result_.head(hop_size()).transpose();
   }
 }
 

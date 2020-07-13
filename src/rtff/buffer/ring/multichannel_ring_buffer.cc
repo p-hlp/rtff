@@ -47,14 +47,14 @@ void MultichannelRingBuffer::Write(const Block<float>& buffer,
                                    uint32_t frame_count) {
   assert(buffer.channel_count() == buffers_.size());
   for (auto channel_idx = 0; channel_idx < buffers_.size(); channel_idx++) {
-    buffers_[channel_idx].Write(buffer.channel(channel_idx).data(),
+    buffers_[channel_idx].Write(buffer.channel(channel_idx),
                                 frame_count);
   }
 }
 bool MultichannelRingBuffer::Read(Block<float>* buffer, uint32_t frame_count) {
   assert(buffer->channel_count() == buffers_.size());
   for (auto channel_idx = 0; channel_idx < buffers_.size(); channel_idx++) {
-    if (!buffers_[channel_idx].Read(buffer->channel(channel_idx).data(),
+    if (!buffers_[channel_idx].Read(buffer->channel(channel_idx),
                                     frame_count)) {
       return false;
     }

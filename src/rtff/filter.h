@@ -20,11 +20,10 @@ class Filter : public AbstractFilter {
    * @brief the function to be executed on each time frequency block
    * @see rtff::AbstractFilter::ProcessTransformedBlock for more.
    */
-  std::function<void(std::vector<std::complex<float>*>, uint32_t)> execute;
+  std::function<void(Block<std::complex<float>>*)> execute;
 
  protected:
-  void ProcessTransformedBlock(std::vector<std::complex<float>*> data,
-                               uint32_t size) override;
+  void ProcessTransformedBlock(Block<std::complex<float>>*) override;
 };
 
 }  // namespace rtff
