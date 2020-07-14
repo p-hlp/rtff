@@ -6,6 +6,7 @@
 
 #include "rtff/abstract_filter.h"
 #include "rtff/filter.h"
+#include "rtff/mixing_filter.h"
 #include "wave/file.h"
 
 const std::string gResourcePath(TEST_RESOURCES_PATH);
@@ -299,5 +300,50 @@ TEST(RTFF, HannWindow) {
   for (auto index = 0; index < 50; index++) {
     filter.Write(buffer);
     filter.Read(&buffer);
+  }
+}
+
+class MyMixingFilter : public rtff::MixingFilter {
+public:
+  // Upmix from one source to two
+  MyMixingFilter() : rtff::MixingFilter(1, 2) {}
+private:
+  
+  void ProcessTransformedBlock(rtff::MixingFilter::Input inputs, rtff::MixingFilter::Output outputs) override {
+    auto input = inputs[0];
+    for (uint8_t channel_idx = 0; channel_idx < input->channel_count(); channel_idx++) {
+      auto input_buffer = Eigen::Map<const Eigen::VectorXcf>(input->channel(channel_idx), input->size());
+      for (auto* output : outputs) {
+        auto output_buffer = Eigen::Map<Eigen::VectorXcf>(output->channel(channel_idx), output->size());
+        output_buffer = input_buffer * 0.5;
+      }
+    }
+  }
+};
+
+
+
+TEST(RTFF, Mixing) {
+  MyMixingFilter filter;
+  std::error_code err;
+  auto channel_number = 1;
+  filter.Init(channel_number, err);
+
+  ASSERT_FALSE(err);
+  auto block_size = 512;
+  filter.set_block_size(block_size);
+  
+  rtff::Waveform buffer(block_size, channel_number);
+  std::vector<rtff::Waveform> inputs;
+  inputs.push_back(buffer);
+  
+  std::vector<rtff::Waveform> outputs;
+  outputs.push_back(buffer);
+  outputs.push_back(buffer);
+  // queue 50 buffer
+  for (auto index = 0; index < 50; index++) {
+//    memset(buffers[0].data(0), 0, block_size);
+    filter.Write(inputs.data());
+    filter.Read(outputs.data());
   }
 }
