@@ -4,6 +4,7 @@
 #include <cstdint>
 
 #include <system_error>
+#include <memory>
 #include <vector>
 #include <complex>
 
