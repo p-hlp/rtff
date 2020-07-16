@@ -1,4 +1,7 @@
 #include "rtff/buffer/ring/multichannel_ring_buffer.h"
+
+#include <cassert>
+
 #include "rtff/buffer/ring/ring_buffer.h"
 #include "rtff/buffer/block.h"
 #include "rtff/buffer/waveform.h"

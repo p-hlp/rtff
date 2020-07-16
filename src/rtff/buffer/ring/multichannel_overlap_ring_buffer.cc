@@ -1,5 +1,7 @@
 #include "rtff/buffer/ring/multichannel_overlap_ring_buffer.h"
 
+#include <cassert>
+
 #include "rtff/buffer/ring/overlap_ring_buffer.h"
 #include "rtff/buffer/waveform.h"
 #include "rtff/buffer/block.h"
