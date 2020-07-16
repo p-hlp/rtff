@@ -24,8 +24,8 @@ void AbstractFilter::ProcessTransformedBlock(
   // TODO: this breaks the overall performance. Copy is useless in N to N
   // filters
   for (auto channel = 0; channel < input->channel_count(); channel++) {
-    memcpy(output->channel(channel), input->channel(channel),
-           input->size() * sizeof(std::complex<float>));
+    std::copy(input->channel(channel), input->channel(channel) + input->size(),
+              output->channel(channel));
   }
 
   ProcessTransformedBlock(output);
