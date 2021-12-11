@@ -89,6 +89,7 @@ function(FindMkl)
   elseif(WIN32)
     if (CMAKE_SIZEOF_VOID_P MATCHES "8")
       # 64bits
+      message("WIN32 - 64bit")
       set(mkl_libraries
          "${MKLROOT}/lib/intel64/mkl_intel_lp64.lib"
          "${MKLROOT}/lib/intel64/mkl_core.lib"
@@ -100,6 +101,7 @@ function(FindMkl)
       endif()
     else ()
       # 32bits
+      message("WIN32 - 32it")
       set(mkl_libraries
          "${MKLROOT}/lib/ia32/mkl_intel_c.lib"
          "${MKLROOT}/lib/ia32/mkl_core.lib"
